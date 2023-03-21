@@ -1,0 +1,25 @@
+spring:
+  jpa:
+    hibernate:
+      format_sql: true
+      use_sql_comments: true
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    database: mysql
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://localhost:3308/MealCoupon?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+      username: ENC(zldNvaXNbeOiQTJ9m+z0WiDnunNa1Kem)
+      password: ENC(jI2gO2fFwaNKxr1QaK7JXQjQ4Ydb2Pishc8QjKxcKHI=)
+      pool-name: MASTER-POOL
+      connection-test-query: SELECT 1
+      connection-init-sql: SELECT 1
+      connection-timeout: 240000
+      validation-timeout: 240000
+      maximum-pool-size: 5
+
+server:
+  port: 8080
