@@ -1,4 +1,7 @@
 spring:
+  config:
+    activate:
+      on-profile: local
   jpa:
     hibernate:
       format_sql: true
@@ -11,9 +14,9 @@ spring:
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://localhost:3308/MealCoupon?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
-      username: ENC(zldNvaXNbeOiQTJ9m+z0WiDnunNa1Kem)
-      password: ENC(jI2gO2fFwaNKxr1QaK7JXQjQ4Ydb2Pishc8QjKxcKHI=)
+      jdbc-url: jdbc:mysql://localhost:3306/order?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+      username: root
+      password: 123456
       pool-name: MASTER-POOL
       connection-test-query: SELECT 1
       connection-init-sql: SELECT 1
@@ -23,3 +26,7 @@ spring:
 
 server:
   port: 8080
+
+rsa:
+  public-key: MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC88TYybyoPnRy4NK3O3i34CWh91BWMWc0Bpm8aEmgdaS0zuKgMx4M3pEoIeGh/MyWjm1sdggLjNEHDKO4J6A5ZPi5eLkZ+Jbyd7VZq155oT96IlqGauYnRooOAaeMRjsEEUxRFK2hM5S+DVQxUk3EeBlJrlwSs60VLjNyHvkFNeQIDAQAB
+  private-key: MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBALzxNjJvKg+dHLg0rc7eLfgJaH3UFYxZzQGmbxoSaB1pLTO4qAzHgzekSgh4aH8zJaObWx2CAuM0QcMo7gnoDlk+Ll4uRn4lvJ3tVmrXnmhP3oiWoZq5idGig4Bp4xGOwQRTFEUraEzlL4NVDFSTcR4GUmuXBKzrRUuM3Ie+QU15AgMBAAECgYEAjHqvuCns1PUUwGTygaex+AROu5dveg3engZ3/qOG468qm5UE5ZOFnV46aTfVQhXuO0msIjFjIjjdWFRbP+RYnXySU457TZCWgvHDFLsigvrpSLK2Kj6WafKpMtWmBTSpPJ4UBtetJm1b/zzSTcd2QIdA4n8IGqDS4mL0VQOs8fECQQDksC0vLpO7hRCP3xjcKpbfhil3Bch8oaVo5a3VvH67dGN9rU9eJ4st4SPTgzaUzw9qV+qWcj55j4QoUNF9a7NlAkEA04Hbm6wHitZSxLqHbXffmHN2Rt2RKS+kYNBkhhOdDQZ73HnCL2SrvfyYW58jRUprTHn40z/5thRvTcWtRPAShQJALzZX/bel9D7CbpFmdn2sbDUsdlARVfmhRoi0XL3vhA/BQn73Nb8AMtaaKN6b9BjTW+cOnUS0tS/13sTgmv4TKQJAM0dLh/14Qqfdn0ad6ONkOWDc7yduty6Oys4bYQpGTE8jHnwCoVzl6oTgJ254rabyRrNXqVfcYdGofpGLhagyxQJAEM8+QygGfVF5TQXmQMydJD4nEdGirP08WoC7LNzQbBBa5y293oayUveYGZ5QgfintZmWCcaJuesNgOhkIMf7Hw==
