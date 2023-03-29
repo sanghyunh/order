@@ -8,12 +8,26 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.sanghyun.order.entity.ExceptionResponse;
+import com.sanghyun.order.exception.AuthorizedException;
 import com.sanghyun.order.exception.BindingException;
 import com.sanghyun.order.exception.CommonException;
-import com.sanghyun.order.exception.ExceptionResponse;
 
 @ControllerAdvice
 public class ExceptionAdvice implements ErrorController {
+
+    @ExceptionHandler(AuthorizedException.class)
+    public ResponseEntity<ExceptionResponse> auth(HttpServletRequest request, AuthorizedException e) {
+
+        ExceptionResponse response = new ExceptionResponse();
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setTitle("에러");
+
+        request.setAttribute("warn", e);
+        request.setAttribute("warn-response", response);
+
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
 
     @ExceptionHandler(value = BindingException.class)
     public ResponseEntity<ExceptionResponse> bindingException(HttpServletRequest request, BindingException e) {

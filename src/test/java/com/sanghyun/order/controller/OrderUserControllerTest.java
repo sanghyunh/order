@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class UserControllerTest extends CommonTest {
+public class OrderUserControllerTest extends CommonTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -26,11 +26,11 @@ public class UserControllerTest extends CommonTest {
     private RsaUtil rsaUtil;
 
     @Test
-    @Transactional
+    // @Transactional
     public void joinTest() throws Exception {
 
         UserJoinRequestDto requestDto = new UserJoinRequestDto();
-        requestDto.setId("test");
+        requestDto.setSignId("test22");
         requestDto.setPassword(this.rsaUtil.encrypt("Password1234@"));
         requestDto.setName("name4321");
         String requestJson = this.converterUtil.toJsonString(requestDto);

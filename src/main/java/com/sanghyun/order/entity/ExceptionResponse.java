@@ -1,4 +1,4 @@
-package com.sanghyun.order.exception;
+package com.sanghyun.order.entity;
 
 import com.sanghyun.order.constant.Errors;
 import lombok.Data;

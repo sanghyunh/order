@@ -8,14 +8,13 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sanghyun.order.CommonTest;
-import com.sanghyun.order.dto.auth.AuthDto.TokenPayloadDto;
 import com.sanghyun.order.dto.auth.AuthDto.TokenDto;
+import com.sanghyun.order.dto.auth.AuthDto.TokenPayloadDto;
 import com.sanghyun.order.dto.auth.AuthDto.TokenRequestDto;
 import com.sanghyun.order.dto.user.UserDto.UserBaseDto;
 import com.sanghyun.order.util.ConverterUtil;
 import com.sanghyun.order.util.DateUtil;
 import com.sanghyun.order.util.JwtUtil;
-import com.sanghyun.order.util.RsaUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -26,25 +25,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class AuthControllerTest extends CommonTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ConverterUtil converterUtil;
-    @Autowired
-    private RsaUtil rsaUtil;
-    @Autowired
-    private JwtUtil jwtUtil;
-    @Autowired
-    private DateUtil dateUtil;
-
     @Test
     @Transactional
     public void loginTest() throws Exception {
 
-        UserBaseDto requestDto = new UserBaseDto();
-        requestDto.setSignId("test");
-        requestDto.setPassword(this.rsaUtil.encrypt("Password1234@"));
-        String requestJson = this.converterUtil.toJsonString(requestDto);
+        UserBaseDto failRequestDto = new UserBaseDto();
+        failRequestDto.setSignId("test");
+        failRequestDto.setPassword(this.rsaUtil.encrypt("Password1234@"));
+        String requestJson = this.converterUtil.toJsonString(failRequestDto);
 
         this.mockMvc.perform(post("/auth/v1/token")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -54,7 +42,7 @@ public class AuthControllerTest extends CommonTest {
                 .andDo(print())
                 .andExpect(status().is5xxServerError());
 
-        requestDto = getLoginDto();
+        UserBaseDto requestDto = this.getLoginDto();
         requestJson = this.converterUtil.toJsonString(requestDto);
 
         this.mockMvc.perform(post("/auth/v1/token")
@@ -105,13 +93,6 @@ public class AuthControllerTest extends CommonTest {
                 .andDo(print())
                 .andExpect(status().isOk());
 
-    }
-
-    private UserBaseDto getLoginDto() {
-        UserBaseDto requestDto = new UserBaseDto();
-        requestDto.setSignId("test22");
-        requestDto.setPassword(this.rsaUtil.encrypt("Password1234@"));
-        return requestDto;
     }
 
 }

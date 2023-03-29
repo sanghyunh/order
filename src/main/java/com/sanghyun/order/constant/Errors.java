@@ -12,6 +12,9 @@ public enum Errors {
     JWT_DECRYPT_ERROR(-5003, "에러", "JWT DECRYPT ERROR"),
     NOT_FOUND_TOKEN(-5004, "에러", "NOT FOUND TOKEN"),
     EXPIRATION_REFRESH_TOKEN(-5005, "에러", "EXPIRATION REFRESH TOKEN"),
+    OAUTH_TOKEN_NOT_FOUND(-5006, "에러", "TOKEN 정보가 없습니다."),
+    OAUTH_TOKEN_TIMEOUT(-5007, "에러", "TOKEN 만료 (refresh)"),
+    OAUTH_TOKEN_ERROR(-5008, "에러", "잘못된 TOKEN 입니다"),
     TEST(-9999, "에러", "임시 에러");
 
     private final int code;

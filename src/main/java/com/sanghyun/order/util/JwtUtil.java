@@ -7,9 +7,12 @@ import java.util.Map;
 import javax.crypto.SecretKey;
 
 import org.springframework.stereotype.Component;
+import org.springframework.util.Base64Utils;
 import org.springframework.util.ObjectUtils;
 
 import com.sanghyun.order.constant.Errors;
+import com.sanghyun.order.dto.auth.AuthDto.TokenPayloadDto;
+import com.sanghyun.order.exception.AuthorizedException;
 import com.sanghyun.order.exception.CommonException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -32,12 +35,6 @@ public class JwtUtil {
     private final ConverterUtil converterUtil;
     private final DateUtil dateUtil;
 
-    public Claims makeClaims(String subject, Map<String, Object> map) {
-        Claims claims = Jwts.claims().setSubject(subject);
-        claims.putAll(map);
-        return claims;
-    }
-
     public String encData(Object claim, String key, Date expiration) {
         SecretKey secretKey = Keys.hmacShaKeyFor(key.getBytes());
         JwtBuilder builder = Jwts.builder();
@@ -46,7 +43,7 @@ public class JwtUtil {
         builder.setSubject("token");
         builder.setExpiration(expiration);
         builder.setIssuedAt(new Date());
-        if(!ObjectUtils.isEmpty(claim)) {
+        if (!ObjectUtils.isEmpty(claim)) {
             builder.claim("claim", claim);
         }
         builder.signWith(secretKey);
@@ -69,5 +66,16 @@ public class JwtUtil {
         return this.converterUtil.toJsonString(body);
     }
 
+    public TokenPayloadDto getPayload(String token) {
+        if (ObjectUtils.isEmpty(token)) {
+            throw new AuthorizedException(Errors.OAUTH_TOKEN_NOT_FOUND);
+        }
+        String[] tokenSplit = token.split("\\.");
+        if (ObjectUtils.isEmpty(tokenSplit) || tokenSplit.length < 1) {
+            throw new AuthorizedException(Errors.OAUTH_TOKEN_ERROR);
+        }
+
+        return this.converterUtil.toObject(new String(Base64Utils.decode(tokenSplit[1].getBytes())), TokenPayloadDto.class);
+    }
 
 }

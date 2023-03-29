@@ -59,7 +59,6 @@ public class TokenService {
 
     @Transactional
     public TokenDto refreshToken(TokenRequestDto tokenDto) {
-        Optional<Token> token2 = this.tokenPersist.findByToken(tokenDto.getToken());
         Token token = this.tokenPersist.findByToken(tokenDto.getToken())
                 .filter(token1 -> token1.getRefreshToken().equals(tokenDto.getRefreshToken()))
                 .orElseThrow(() -> new CommonException(Errors.NOT_FOUND_TOKEN));
@@ -79,5 +78,9 @@ public class TokenService {
 
     public void deleteToken(Token token) {
         this.tokenPersist.delete(token);
+    }
+
+    public Optional<Token> findByToken(String token) {
+        return this.tokenPersist.findByToken(token);
     }
 }
