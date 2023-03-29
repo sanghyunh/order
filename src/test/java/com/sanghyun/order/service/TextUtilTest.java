@@ -30,4 +30,10 @@ public class TextUtilTest extends CommonTest {
         Assertions.assertTrue(this.textUtil.passwordAllowedString("14aSa22aaa333@"));
     }
 
+    @Test
+    public void hashTest() {
+        System.out.println(this.textUtil.createHash("EF40C708-CE6E-43D7-A193-17B5964BDCB9", "test22"));
+
+    }
+
 }

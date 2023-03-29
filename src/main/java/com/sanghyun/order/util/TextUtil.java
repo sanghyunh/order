@@ -1,6 +1,7 @@
 package com.sanghyun.order.util;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
@@ -47,6 +48,10 @@ public class TextUtil {
             log.error("createHash Exception : {}", e.getMessage(), e);
             throw new CommonException(Errors.COMMON_ENCRYPT_ERROR);
         }
+    }
+
+    public String createUUID() {
+        return UUID.randomUUID().toString().toUpperCase();
     }
 
 }

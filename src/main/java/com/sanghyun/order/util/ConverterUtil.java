@@ -1,6 +1,7 @@
 package com.sanghyun.order.util;
 
 import java.text.DecimalFormat;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
@@ -16,13 +17,13 @@ public class ConverterUtil {
 
     private final ObjectMapper objectMapper;
 
-    public String toJsonString(Object o) {
+    public String toJsonString(Object object) {
         String value = "{}";
-        if (ObjectUtils.isEmpty(o)) {
+        if (ObjectUtils.isEmpty(object)) {
             return value;
         }
         try {
-            value = this.objectMapper.writeValueAsString(o);
+            value = this.objectMapper.writeValueAsString(object);
         } catch (Exception e) {
             log.info("toJsonString error: {}", e.getMessage(), e);
             return value;
@@ -38,5 +39,15 @@ public class ConverterUtil {
             return null;
         }
     }
+
+    public Map<String, Object> toMap(Object object) {
+        try {
+            return this.objectMapper.convertValue(object, Map.class);
+        } catch (Exception e) {
+            log.info("toObject Error :{}", e.getMessage(), e);
+            return null;
+        }
+    }
+
 
 }
