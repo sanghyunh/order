@@ -1,0 +1,388 @@
+openapi: 3.0.0
+info:
+  title: order api
+  description: order API 규격서
+  version: 4.0.0
+servers:
+  - url: http://localhost:8080
+    description: local
+tags:
+  - name: Order
+    description: 주문 API
+  - name: User
+    description: 사용자 API
+  - name: Auth
+    description: 인증 API
+paths:
+
+  /user/v1/join:
+    post:
+      tags:
+        - User
+      summary: 회원가입 처리 API
+      description: 사용자 id, password, 이름을 입력 받아 회원 가입 처리를 한다.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+                - password
+              properties:
+                id:
+                  type: string
+                  description: 사용자 ID
+                password:
+                  type: string
+                  description: 사용자 비밀번호 RSA 암호화 후 전달
+
+      responses:
+        201:
+          description: OK
+        500:
+          $ref: '#/components/responses/ServerError'
+
+  /auth/v1/token:
+    post:
+      tags:
+        - Auth
+      summary: 로근인 처리 API
+      description: 사용자 id, password를 입력 받아 로그인 처리를 한다.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+                - password
+              properties:
+                id:
+                  type: string
+                  description: 사용자 ID
+                password:
+                  type: string
+                  description: 사용자 비밀번호 RSA 암호화 후 전달
+
+      responses:
+        201:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: access token
+                  refreshToken:
+                    type: string
+                    description: refresh token
+        500:
+          $ref: '#/components/responses/ServerError'
+
+  /order/v1:
+    post:
+      tags:
+        - Order
+      summary: 주문 처리
+      description: 주문 처리 API
+      parameters:
+        - $ref: '#/components/parameters/header-auth'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                goodsList:
+                  type: array
+                  description: 상품
+                  items:
+                    required:
+                      - goods
+                      - quantity
+                      - price
+                      - goodsType
+                    properties:
+                      goods:
+                        type: string
+                        description: 상품명
+                      quantity:
+                        type: integer
+                        description: 수량
+                      price:
+                        type: integer
+                        description: 금액
+                      goodsType:
+                        type: string
+                        enum: [UNKNOWN, BOX]
+                        description: UNKNOWN 알수없음, BOX 박스
+                shipping:
+                  type: object
+                  description: 배송정보
+                  properties:
+                    recipient:
+                      type: string
+                      description: 수령인
+                    tel:
+                      type: string
+                      description: 전화번호
+                    zonecode:
+                      type: string
+                      description: 우편번호
+                    roadAddress:
+                      type: string
+                      description: 도로명 주소
+                    jibunAddress:
+                      type: string
+                      description: 지번 주소
+                    addressDetail:
+                      type: string
+                      description: 상세주소
+                    shippingMemo:
+                      type: string
+                      description: 배송 메모
+                    longitude:
+                      type: number
+                      format: double
+                      description: 경도
+                    latitude:
+                      type: number
+                      format: double
+                      description: 위도
+                    fee:
+                      type: number
+                      format: integer
+                      description: 배달 수수료
+
+
+      responses:
+        201:
+          description: OK
+        500:
+          $ref: '#/components/responses/ServerError'
+    put:
+      tags:
+        - Order
+      summary: 주문 수정
+      description: 주문 수정 처리 API
+      parameters:
+        - $ref: '#/components/parameters/header-auth'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - order
+              properties:
+                orderIdx:
+                  type: string
+                  description: 주문 고유 번호
+                shipping:
+                  type: object
+                  description: 배송정보
+                  required:
+                    - recipient
+                    - tel
+                    - zoncode
+                    - roadAddress
+                    - jibunAddress
+                    - addressDetail
+                    - logitude
+                    - latitude
+                  properties:
+                    recipient:
+                      type: string
+                      description: 수령인
+                    tel:
+                      type: string
+                      description: 전화번호
+                    zonecode:
+                      type: string
+                      description: 우편번호
+                    roadAddress:
+                      type: string
+                      description: 도로명 주소
+                    jibunAddress:
+                      type: string
+                      description: 지번 주소
+                    addressDetail:
+                      type: string
+                      description: 상세주소
+                    shippingMemo:
+                      type: string
+                      description: 배송 메모
+                    longitude:
+                      type: number
+                      format: double
+                      description: 경도
+                    latitude:
+                      type: number
+                      format: double
+                      description: 위도
+
+      responses:
+        201:
+          description: OK
+        500:
+          $ref: '#/components/responses/ServerError'
+  /order/v1/{startDate}/{endDate}:
+    get:
+      tags:
+        - Order
+      summary: 주문 조회
+      description: 주문 조회 API
+      parameters:
+        - $ref: '#/components/parameters/header-auth'
+        - in: path
+          name: startDate
+          description: 조회 날짜 (yyyyMMdd 형식)
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: endDate
+          description: 조회 날짜 (yyyyMMdd 형식)
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  orderList:
+                    type: array
+                    items:
+                      properties:
+                        orderList:
+                          type: object
+                          description: 상품 주문
+                          required:
+                            - orderIdx
+                            - orderDate
+                            - orderStatus
+                            - goodsList
+                          properties:
+                            orderIdx:
+                              type: string
+                              description: 주문 고유 아이디
+                            orderDate:
+                              type: string
+                              description: 주문일자
+                            orderStatus:
+                              type: string
+                              enum: [ORDER, COMPLETE, CANCEL]
+                              description: 주문, 주문완료, 취소
+                            goodsList:
+                              type: array
+                              description: 상품
+                              items:
+                                required:
+                                  - goods
+                                  - quantity
+                                  - price
+                                  - goodsType
+                                properties:
+                                  goods:
+                                    type: string
+                                    description: 상품명
+                                  quantity:
+                                    type: integer
+                                    description: 수량
+                                  price:
+                                    type: integer
+                                    description: 금액
+                                  goodsType:
+                                    type: string
+                                    enum: [UNKNOWN, BOX]
+                                    description: UNKNOWN 알수없음, BOX 박스
+                            shipping:
+                              type: object
+                              description: 배송정보
+                              required:
+                                - recipient
+                                - tel
+                                - zoncode
+                                - roadAddress
+                                - jibunAddress
+                                - addressDetail
+                                - logitude
+                                - latitude
+                              properties:
+                                recipient:
+                                  type: string
+                                  description: 수령인
+                                tel:
+                                  type: string
+                                  description: 전화번호
+                                zonecode:
+                                  type: string
+                                  description: 우편번호
+                                roadAddress:
+                                  type: string
+                                  description: 도로명 주소
+                                jibunAddress:
+                                  type: string
+                                  description: 지번 주소
+                                addressDetail:
+                                  type: string
+                                  description: 상세주소
+                                shippingMemo:
+                                  type: string
+                                  description: 배송 메모
+                                longitude:
+                                  type: number
+                                  format: double
+                                  description: 경도
+                                latitude:
+                                  type: number
+                                  format: double
+                                  description: 위도
+                                fee:
+                                  type: number
+                                  format: integer
+                                  description: 배달 수수료
+                                shippingStatus:
+                                  type: string
+                                  enum: [NONE, ONGOING, COMPLETE, ACCEPT]
+                                  description: NONE 미입력, ONGOING 배송중 , COMPLETE 배송완료
+        500:
+          $ref: '#/components/responses/ServerError'
+
+components:
+  parameters:
+    header-auth:
+      in: header
+      name: Authorization
+      description: 사용자 token
+      required: true
+      schema:
+        type: string
+  responses:
+    ServerError:
+      description: server error.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                description: 에러 코드
+              title:
+                type: string
+                description: 에러 제목
+              message:
+                type: string
+                description: 에러 메시지
+            required:
+              - code
+              - title
+              - message

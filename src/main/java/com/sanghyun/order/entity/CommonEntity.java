@@ -3,6 +3,9 @@ package com.sanghyun.order.entity;
 import java.time.LocalDateTime;
 import javax.persistence.Convert;
 import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -21,18 +24,21 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Setter(value = AccessLevel.PACKAGE)
 @EntityListeners(AuditingEntityListener.class)
 public abstract class CommonEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idx;
+
     @CreatedDate
     @Convert(converter = LocalDateTimeConverter.class)
-    private LocalDateTime createDate;
-    private String createUser;
+    protected LocalDateTime createDate;
+    protected String createUser;
     @LastModifiedDate
     @Convert(converter = LocalDateTimeConverter.class)
-    private LocalDateTime updateDate;
-    private String updateUser;
+    protected LocalDateTime updateDate;
+    protected String updateUser;
 
 }
 

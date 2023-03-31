@@ -12,14 +12,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OrderDetailPersist {
 
-    private OrderDetailRepository orderDetailRepository;
+    private final OrderDetailRepository orderDetailRepository;
 
-    public OrderDetail createOrderDetail(Long orderMasterIdx, GoodsDto goodsDto) {
+    public OrderDetail createOrderDetail(String userId, Long orderMasterIdx, GoodsDto goodsDto) {
         return OrderDetail.builder()
                 .orderMasterIdx(orderMasterIdx)
                 .goods(goodsDto.getGoods())
                 .quantity(goodsDto.getQuantity())
                 .goodsType(goodsDto.getGoodsType())
+                .price(goodsDto.getPrice())
+                .createUser(userId)
                 .build();
 
     }

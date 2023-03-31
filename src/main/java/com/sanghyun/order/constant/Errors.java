@@ -15,6 +15,7 @@ public enum Errors {
     OAUTH_TOKEN_NOT_FOUND(-5006, "에러", "TOKEN 정보가 없습니다."),
     OAUTH_TOKEN_TIMEOUT(-5007, "에러", "TOKEN 만료 (refresh)"),
     OAUTH_TOKEN_ERROR(-5008, "에러", "잘못된 TOKEN 입니다"),
+    NOT_POSSIBLE_UPDATE_ORDER(-5009, "에러", "수정할 수 없는 주문 건 입니다."),
     TEST(-9999, "에러", "임시 에러");
 
     private final int code;

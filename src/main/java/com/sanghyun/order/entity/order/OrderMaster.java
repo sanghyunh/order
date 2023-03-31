@@ -1,50 +1,58 @@
 package com.sanghyun.order.entity.order;
 
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
+import com.sanghyun.order.dto.order.OrderDto.ShippingDto;
 import com.sanghyun.order.entity.CommonEntity;
 import com.sanghyun.order.entity.user.OrderUser;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @SuperBuilder
-@Setter(value = AccessLevel.PACKAGE)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
+@Table(name = "OrderMaster", indexes = {
+        @Index(name = "orderDate", columnList = "orderDate"),
+        @Index(name = "userId", columnList = "userId")
+})
 public class OrderMaster extends CommonEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idx;
     @Column(nullable = false)
     private String userId;
+    @Column(nullable = false)
     private Long totalPrice;
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
+    @Column(nullable = false)
+    private String orderDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "userId", insertable = false, updatable = false, nullable = false)
-    private OrderUser order;
+    private OrderUser orderUser;
 
     @OneToMany(mappedBy = "orderMasterIdx", fetch = FetchType.LAZY)
     private Set<OrderDetail> orderDetailList;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idx", referencedColumnName = "orderMasterIdx",insertable = false, updatable = false, nullable = false)
+    private Shipping shipping;
 
     @Getter
     public enum OrderStatus {
